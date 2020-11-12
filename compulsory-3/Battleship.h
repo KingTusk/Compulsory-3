@@ -11,7 +11,7 @@ const char MISS = 'M';
 const char HIT = 'H';
 char board[M][N]; // 2d array with M rows and N columns
 int numberOfHits = 0;
-int numberOfShots = 15;
+int numberOfShots = 18;
 int numberOfShipsToShoot = 11;
 int numberOfThreeShipsToShoot = 4;
 int letterToNumber(char letter);
@@ -42,11 +42,21 @@ void makeBoard3(int numberOfShips) {
             if (right) {
                 if ((row + 3) < M) {
                     okayPos = true;
+                    for (int j = 0; j < 3; j++) {
+                        if (board[row + j][column] != BLANK) {
+                            okayPos = false;
+                        }
+                    }
                 }
             }
             else {
                 if ((column + 3) < N) {
                     okayPos = true;
+                    for (int j = 0; j < 3; j++) {
+                        if (board[row][column + j] != BLANK) {
+                            okayPos = false;
+                        }
+                    }
                 }
             }
         }while (!okayPos);
@@ -67,15 +77,25 @@ void makeBoard3(int numberOfShips) {
 void play() {
     std::cout << "Do you want to pay with big or small ships? 1 for big, 2 for small";
     bool acceptableinput = false;
-    char choice = _getch();
+    bool threemode = false;
     do {
+        char choice = _getch();
         if (choice == '1' || choice == '2') {
             acceptableinput = true;
+            threemode = int(choice)-1;
+        }
+        else{
             std::cout << "You can only type 1 or 2!";
         }
     } while (!acceptableinput);
     makeEmptyBoard();
-    makeBoard(numberOfShipsToShoot);
+    system("cls");
+    if (threemode){
+        makeBoard3(numberOfThreeShipsToShoot);
+    }
+    else {
+        makeBoard(numberOfShipsToShoot);
+    }
     do {
         printPlayerBoard();
         std::cout << "There are " << numberOfShipsToShoot << " ships to shoot, you have hit " << numberOfHits << "ships, and you have " << numberOfShots << " shot to get all of them" << std::endl;
